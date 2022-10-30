@@ -62,6 +62,9 @@
 #include "jog.h"
 #include "sleep.h"
 
+#define SCARA true
+#include "scara.h"
+
 // ---------------------------------------------------------------------------------------
 // COMPILE-TIME ERROR CHECKING OF DEFINE VALUES:
 

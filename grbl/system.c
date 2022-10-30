@@ -160,6 +160,9 @@ uint8_t system_execute_line(char *line)
       // Block any system command that requires the state as IDLE/ALARM. (i.e. EEPROM, homing)
       if ( !(sys.state == STATE_IDLE || sys.state == STATE_ALARM) ) { return(STATUS_IDLE_ERROR); }
       switch( line[1] ) {
+        case 'V' : //Prints Scara Status
+				  scara_report_positions();
+				  break;
         case '#' : // Print Grbl NGC parameters
           if ( line[2] != 0 ) { return(STATUS_INVALID_STATEMENT); }
           else { report_ngc_parameters(); }
@@ -169,6 +172,12 @@ uint8_t system_execute_line(char *line)
           if (system_check_safety_door_ajar()) { return(STATUS_CHECK_DOOR); } // Block if safety door is ajar.
           sys.state = STATE_HOMING; // Set system state variable
           if (line[2] == 0) {
+            #ifdef IS_SCARA
+							scara_home = false;
+							switch(line[char_counter]) {
+								case 'M': scara_home = true;  break;
+							}	
+						#endif
             mc_homing_cycle(HOMING_CYCLE_ALL);
           #ifdef HOMING_SINGLE_AXIS_COMMANDS
             } else if (line[3] == 0) {
@@ -184,6 +193,12 @@ uint8_t system_execute_line(char *line)
             sys.state = STATE_IDLE; // Set to IDLE when complete.
             st_go_idle(); // Set steppers to the settings idle state before returning.
             if (line[2] == 0) { system_execute_startup(line); }
+            #ifdef IS_SCARA
+								switch(line[char_counter]) {
+								case 'M': write_global_settings(); 	
+								break;
+								}	
+						#endif
           }
           break;
         case 'S' : // Puts Grbl to sleep [IDLE/ALARM]
@@ -299,9 +314,18 @@ float system_convert_axis_steps_to_mpos(int32_t *steps, uint8_t idx)
 void system_convert_array_steps_to_mpos(float *position, int32_t *steps)
 {
   uint8_t idx;
+  #if IS_SCARA
+    float position_scara[3];
+    for (idx=0; idx<N_AXIS; idx++)
+    {
+        position_scara[idx] = system_convert_axis_steps_to_mpos(steps, idx);
+    }
+		forward_kinematics_SCARA(position_scara,position);
+  #else
   for (idx=0; idx<N_AXIS; idx++) {
     position[idx] = system_convert_axis_steps_to_mpos(steps, idx);
   }
+  #endif
   return;
 }
 

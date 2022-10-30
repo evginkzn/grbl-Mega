@@ -342,6 +342,9 @@ void limits_go_home(uint8_t cycle_mask)
                 #else
                   axislock[idx] &= ~(step_pin[idx]);
                 #endif
+                #ifdef IS_SCARA
+                    if (scara_home) scara_report_home_pos(idx);
+                #endif
               }
             }
             sys.homing_axis_lock[idx] = axislock[idx];
