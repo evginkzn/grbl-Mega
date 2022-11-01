@@ -46,11 +46,11 @@ void forward_kinematics_SCARA(float const *f_scara, float *cartesian)
 
     x_sin = sin(RADIANS(f_scara[X_AXIS])) * L1;
     x_cos = cos(RADIANS(f_scara[X_AXIS])) * L1;
-    y_sin = sin(RADIANS(f_scara[Y_AXIS])) * L2;//µ±Yµç»ú¿ØÖÆÐ¡±ÛÏà¶ÔÓÚÊÀ½ç×ø±êÏµÐý×ª½Ç¶ÈÊ±Ê¹ÓÃ´Ë¹«Ê½
-    y_cos = cos(RADIANS(f_scara[Y_AXIS])) * L2;//µ±Yµç»ú¿ØÖÆÐ¡±ÛÏà¶ÔÓÚÊÀ½ç×ø±êÏµÐý×ª½Ç¶ÈÊ±Ê¹ÓÃ´Ë¹«Ê½
+    y_sin = sin(RADIANS(f_scara[Y_AXIS])) * L2;//ï¿½ï¿½Yï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ïµï¿½ï¿½×ªï¿½Ç¶ï¿½Ê±Ê¹ï¿½Ã´Ë¹ï¿½Ê½
+    y_cos = cos(RADIANS(f_scara[Y_AXIS])) * L2;//ï¿½ï¿½Yï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ïµï¿½ï¿½×ªï¿½Ç¶ï¿½Ê±Ê¹ï¿½Ã´Ë¹ï¿½Ê½
 
-    cartesian[X_AXIS] = -x_cos - y_cos - SCARA_OFFSET_X;  //ÇóµÃÓÃ»§×ø±êÏµÏÂXÖµ
-    cartesian[Y_AXIS] = x_sin + y_sin - SCARA_OFFSET_Y;  //ÇóµÃÓÃ»§×ø±êÏµÏÂYÖµ
+    cartesian[X_AXIS] = -x_cos - y_cos - SCARA_OFFSET_X;  //ï¿½ï¿½ï¿½ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½Ïµï¿½ï¿½XÖµ
+    cartesian[Y_AXIS] = x_sin + y_sin - SCARA_OFFSET_Y;  //ï¿½ï¿½ï¿½ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½Ïµï¿½ï¿½YÖµ
     cartesian[Z_AXIS] = (float)f_scara[Z_AXIS];
 	cartesian[A_AXIS] = (float)f_scara[A_AXIS];
 
@@ -62,8 +62,8 @@ void inverse_kinematics(float const *cartesian, float *f_scara)
 
     static float SCARA_C2, SCARA_S2, SCARA_K1, SCARA_K2, SCARA_theta, SCARA_psi;
 
-    SCARA_pos[X_AXIS] = -cartesian[X_AXIS] - SCARA_OFFSET_X;  //ÇóÊÀ½ç×ø±êÏµÏÂXÖµ²¢È¡·´
-    SCARA_pos[Y_AXIS] = cartesian[Y_AXIS] + SCARA_OFFSET_Y;  //ÇóÊÀ½ç×ø±êÏµÏÂYÖµ
+    SCARA_pos[X_AXIS] = -cartesian[X_AXIS] - SCARA_OFFSET_X;  //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ïµï¿½ï¿½XÖµï¿½ï¿½È¡ï¿½ï¿½
+    SCARA_pos[Y_AXIS] = cartesian[Y_AXIS] + SCARA_OFFSET_Y;  //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ïµï¿½ï¿½YÖµ
 
     SCARA_C2 =   ( sq(SCARA_pos[X_AXIS]) + sq(SCARA_pos[Y_AXIS]) - L1_2 - L2_2 ) /(2*L1*L2);
     SCARA_S2 = sqrtf( 1 - sq(SCARA_C2) );
@@ -71,13 +71,13 @@ void inverse_kinematics(float const *cartesian, float *f_scara)
     SCARA_K1 = L1_2 + L2_2 * SCARA_C2;
     SCARA_K2 = L2_2 * SCARA_S2;
 
-    SCARA_theta = ( atan2f(SCARA_K1, SCARA_K2)-atan2f(SCARA_pos[X_AXIS],SCARA_pos[Y_AXIS]) ) ;//´ó±ÛÐý×ª½Ç¶È£¬¼´Ö÷±ÛÓë-XÖá¼Ð½Ç
-    SCARA_psi   =   atan2f(SCARA_S2,SCARA_C2) + SCARA_theta;//Ð¡±ÛÐý×ª½Ç¶È£¬µ±Yµç»ú¿ØÖÆÐ¡±ÛÏà¶ÔÓÚÊÀ½ç×ø±êÏµÐý×ª½Ç¶ÈÊ±Ê¹ÓÃ´Ë¹«Ê½
+    SCARA_theta = ( atan2f(SCARA_K1, SCARA_K2)-atan2f(SCARA_pos[X_AXIS],SCARA_pos[Y_AXIS]) ) ;//ï¿½ï¿½ï¿½ï¿½ï¿½×ªï¿½Ç¶È£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½-Xï¿½ï¿½Ð½ï¿½
+    SCARA_psi   =   atan2f(SCARA_S2,SCARA_C2) + SCARA_theta;//Ð¡ï¿½ï¿½ï¿½ï¿½×ªï¿½Ç¶È£ï¿½ï¿½ï¿½Yï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ïµï¿½ï¿½×ªï¿½Ç¶ï¿½Ê±Ê¹ï¿½Ã´Ë¹ï¿½Ê½
 		
 		if(!angle_mode)
 		{
-				f_scara[X_AXIS] = DEGREES(SCARA_theta); //´ó±ÛÐý×ª½Ç¶È×ª»»Îª»¡¶È
-				f_scara[Y_AXIS] = DEGREES(SCARA_psi);   //Ð¡±ÛÐý×ª½Ç¶È×ª»»Îª»¡¶È
+				f_scara[X_AXIS] = DEGREES(SCARA_theta); //ï¿½ï¿½ï¿½ï¿½ï¿½×ªï¿½Ç¶ï¿½×ªï¿½ï¿½Îªï¿½ï¿½ï¿½ï¿½
+				f_scara[Y_AXIS] = DEGREES(SCARA_psi);   //Ð¡ï¿½ï¿½ï¿½ï¿½×ªï¿½Ç¶ï¿½×ªï¿½ï¿½Îªï¿½ï¿½ï¿½ï¿½
 				f_scara[Z_AXIS] = cartesian[Z_AXIS];
 				f_scara[A_AXIS] = cartesian[A_AXIS];
 		}
@@ -98,7 +98,7 @@ void scara_report_positions()
 		
     for (idx=0; idx<N_AXIS; idx++)
     {
-        position_scara[idx] = system_convert_axis_steps_to_mpos(sys.position, idx);
+        position_scara[idx] = system_convert_axis_steps_to_mpos(sys_position, idx);
     }
 		printPgmString(PSTR("SCARA Theta:"));
     printFloat(position_scara[X_AXIS],2);
@@ -111,7 +111,7 @@ void scara_report_positions()
 void scara_report_home_pos(uint8_t idx) 
 {	
 		static float position_scara;
-		position_scara = system_convert_axis_steps_to_mpos(sys.position, idx);		
+		position_scara = system_convert_axis_steps_to_mpos(sys_position, idx);		
 		switch(idx){
 		case 0: 
 				if (scara_home) {

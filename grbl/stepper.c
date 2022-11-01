@@ -25,7 +25,7 @@
 // Some useful constants.
 #define DT_SEGMENT (1.0/(ACCELERATION_TICKS_PER_SECOND*60.0)) // min/segment
 #define REQ_MM_INCREMENT_SCALAR 1.25
-#define RAMP_ACCEL 0
+#define RAMP_ACCEL 4
 #define RAMP_CRUISE 1
 #define RAMP_DECEL 2
 #define RAMP_DECEL_OVERRIDE 3

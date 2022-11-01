@@ -29,6 +29,7 @@
 #define config_h
 #include "grbl.h" // For Arduino IDE compatibility.
 
+#define DEFAULTS_SCARA
 
 // Define CPU pin map and default settings.
 // NOTE: OEMs can avoid the need to maintain/update the defaults.h and cpu_map.h files and use only
