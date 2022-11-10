@@ -20,25 +20,14 @@
 
 #include "grbl.h"
 
-float ManualHomePos[4];
-float L1,L2,L1_2,L2_2;
+float const L1 = SCARA_LINKAGE_1,
+            L2 = SCARA_LINKAGE_2,
+            L1_2 = sq(SCARA_LINKAGE_1),
+            L2_2 = sq(SCARA_LINKAGE_2);
 
 uint8_t angle_mode=false;
-bool scara_home = false;	
 
- 
-
-void Init_Scara(){
-
-  ManualHomePos[0] = -settings.scara_theta; //MANUAL_X_HOME_POS
-  ManualHomePos[1] = settings.scara_psi; //MANUAL_Y_HOME_POS
-  ManualHomePos[2] = MANUAL_Z_HOME_POS;
-  ManualHomePos[3] = MANUAL_A_HOME_POS;
-  L1 =settings.scara_arm1; 
-  L2 =settings.scara_arm2; 
-  L1_2 = sq(settings.scara_arm1);
-  L2_2 = sq(settings.scara_arm2);  
-}
+float ManualHomePos[3]={MANUAL_X_HOME_POS,MANUAL_Y_HOME_POS,MANUAL_Z_HOME_POS}; 
 
 void forward_kinematics_SCARA(float const *f_scara, float *cartesian)
 {
@@ -52,7 +41,6 @@ void forward_kinematics_SCARA(float const *f_scara, float *cartesian)
     cartesian[X_AXIS] = -x_cos - y_cos - SCARA_OFFSET_X;  //����û�����ϵ��Xֵ
     cartesian[Y_AXIS] = x_sin + y_sin - SCARA_OFFSET_Y;  //����û�����ϵ��Yֵ
     cartesian[Z_AXIS] = (float)f_scara[Z_AXIS];
-	cartesian[A_AXIS] = (float)f_scara[A_AXIS];
 
 }
 
@@ -68,8 +56,8 @@ void inverse_kinematics(float const *cartesian, float *f_scara)
     SCARA_C2 =   ( sq(SCARA_pos[X_AXIS]) + sq(SCARA_pos[Y_AXIS]) - L1_2 - L2_2 ) /(2*L1*L2);
     SCARA_S2 = sqrtf( 1 - sq(SCARA_C2) );
 
-    SCARA_K1 = L1_2 + L2_2 * SCARA_C2;
-    SCARA_K2 = L2_2 * SCARA_S2;
+    SCARA_K1 = SCARA_LINKAGE_1 + SCARA_LINKAGE_2 * SCARA_C2;
+    SCARA_K2 = SCARA_LINKAGE_2 * SCARA_S2;
 
     SCARA_theta = ( atan2f(SCARA_K1, SCARA_K2)-atan2f(SCARA_pos[X_AXIS],SCARA_pos[Y_AXIS]) ) ;//�����ת�Ƕȣ���������-X��н�
     SCARA_psi   =   atan2f(SCARA_S2,SCARA_C2) + SCARA_theta;//С����ת�Ƕȣ���Y�������С���������������ϵ��ת�Ƕ�ʱʹ�ô˹�ʽ
@@ -79,14 +67,12 @@ void inverse_kinematics(float const *cartesian, float *f_scara)
 				f_scara[X_AXIS] = DEGREES(SCARA_theta); //�����ת�Ƕ�ת��Ϊ����
 				f_scara[Y_AXIS] = DEGREES(SCARA_psi);   //С����ת�Ƕ�ת��Ϊ����
 				f_scara[Z_AXIS] = cartesian[Z_AXIS];
-				f_scara[A_AXIS] = cartesian[A_AXIS];
 		}
 		else
 		{
 				f_scara[X_AXIS] = cartesian[X_AXIS]; 
 				f_scara[Y_AXIS] = cartesian[Y_AXIS]; 
-				f_scara[Z_AXIS] = cartesian[Z_AXIS];	
-				f_scara[A_AXIS] = cartesian[A_AXIS];				
+				f_scara[Z_AXIS] = cartesian[Z_AXIS];		
 		
 		}
 }
@@ -105,33 +91,6 @@ void scara_report_positions()
 		printPgmString(PSTR("   Psi+Theta:"));
     printFloat(position_scara[Y_AXIS],2);
 		printPgmString(PSTR("\n"));		
-
-}
-
-void scara_report_home_pos(uint8_t idx) 
-{	
-		static float position_scara;
-		position_scara = system_convert_axis_steps_to_mpos(sys_position, idx);		
-		switch(idx){
-		case 0: 
-				if (scara_home) {
-					ManualHomePos[0] = position_scara;
-					settings.scara_theta = - position_scara;
-					}
-				printPgmString(PSTR("SCARA Psi:"));
-                scara_home = false;				
-				break;
-		case 1: 
-				position_scara = position_scara + 135;
-				if (scara_home) {
-					    ManualHomePos[1] = position_scara;
-						settings.scara_psi = position_scara;
-				    }
-				printPgmString(PSTR("SCARA Theta:")); 
-				break;
-		}
-		printFloat(position_scara,2);
-        printPgmString(PSTR("\n"));			
 
 }
 

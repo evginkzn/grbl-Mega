@@ -22,8 +22,11 @@
 #define grbl_h
 
 // Grbl versioning system
-#define GRBL_VERSION "1.1g-scara"
+#define GRBL_VERSION "1.1g - scara"
 #define GRBL_VERSION_BUILD "20180813.Mega"
+
+#define SCARA true
+#define SERVO_PEN
 
 // Define standard libraries used by Grbl.
 #include <avr/io.h>
@@ -38,9 +41,13 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-// Define the Grbl system include files. NOTE: Do not alter organization.
-#define SCARA true
+#ifdef SCARA
 #include "scara.h"
+#endif
+
+#define SERVO_PIN
+
+// Define the Grbl system include files. NOTE: Do not alter organization.
 #include "config.h"
 #include "nuts_bolts.h"
 #include "settings.h"

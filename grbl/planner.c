@@ -325,9 +325,9 @@ uint8_t plan_buffer_line(float *target, plan_line_data_t *pl_data)
   int32_t target_steps[N_AXIS], position_steps[N_AXIS];
   float unit_vec[N_AXIS], delta_mm;
   uint8_t idx;
-  #ifdef IS_SCARA
-	float target_float[N_AXIS];
-	#endif
+#ifdef IS_SCARA
+  float target_float[N_AXIS];
+#endif
 
   // Copy position data based on type of motion being planned.
   if (block->condition & PL_COND_FLAG_SYSTEM_MOTION) { 
@@ -346,10 +346,10 @@ uint8_t plan_buffer_line(float *target, plan_line_data_t *pl_data)
     block->steps[A_MOTOR] = labs((target_steps[X_AXIS]-position_steps[X_AXIS]) + (target_steps[Y_AXIS]-position_steps[Y_AXIS]));
     block->steps[B_MOTOR] = labs((target_steps[X_AXIS]-position_steps[X_AXIS]) - (target_steps[Y_AXIS]-position_steps[Y_AXIS]));
   #endif
-#if IS_SCARA
-	  inverse_kinematics(target,target_float);
-#endif
 
+#if IS_SCARA
+	inverse_kinematics(target,target_float);
+#endif
   for (idx=0; idx<N_AXIS; idx++) {
     // Calculate target position in absolute steps, number of steps for each axis, and determine max step events.
     // Also, compute individual axes distance for move and prep unit vector calculations.
@@ -369,9 +369,9 @@ uint8_t plan_buffer_line(float *target, plan_line_data_t *pl_data)
       }
     #elif IS_SCARA
       target_steps[idx] = lroundf(target_float[idx]*settings.steps_per_mm[idx]);
-      block->steps[idx] = abs(target_steps[idx]-pl.position[idx]);
+      block->steps[idx] = abs(target_steps[idx]-position_steps[idx]);
       block->step_event_count = max(block->step_event_count, block->steps[idx]);
-      delta_mm = (target_steps[idx] - pl.position[idx])/settings.steps_per_mm[idx];
+      delta_mm = (target_steps[idx] - position_steps[idx])/settings.steps_per_mm[idx];
     #else
       target_steps[idx] = lround(target[idx]*settings.steps_per_mm[idx]);
       block->steps[idx] = labs(target_steps[idx]-position_steps[idx]);

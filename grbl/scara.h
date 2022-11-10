@@ -28,31 +28,29 @@
 #include "grbl.h"
 
 #ifdef SCARA
-	#define IS_SCARA true
+#define IS_SCARA true
 #endif
 
 
 // Length of inner and outer support arms. Measure arm lengths precisely.
-//#define SCARA_LINKAGE_1 200.0f//mm
-//#define SCARA_LINKAGE_2 200.0f //mm
+#define SCARA_LINKAGE_1 200.0f //mm
+#define SCARA_LINKAGE_2 200.0f //mm
 
 // SCARA tower offset (position of Tower relative to bed zero position)
 // This needs to be reasonably accurate as it defines the printbed position in the SCARA space.
-#define SCARA_OFFSET_X -135 //-135mm
-#define SCARA_OFFSET_Y 105//105mm	
+#define SCARA_OFFSET_X -135 //mm
+#define SCARA_OFFSET_Y 105//mm	
 
-//#define MANUAL_X_HOME_POS -45.43f//theta 
-//#define MANUAL_Y_HOME_POS 95.67f //psi 
+#define MANUAL_X_HOME_POS -45.43f
+#define MANUAL_Y_HOME_POS 95.67f
 #define MANUAL_Z_HOME_POS 0.0f
-#define MANUAL_A_HOME_POS 0.0f
 
 #define RADIANS(d) ((d)*(float)M_PI/180.0f)
 #define DEGREES(r) ((r)*180.0f/(float)M_PI)
 
 #define sq(x) x*x
 
-extern float ManualHomePos[4];
-extern bool scara_home;
+extern float ManualHomePos[3];
 void inverse_kinematics(float const *cartesian, float *f_scara);
 void forward_kinematics_SCARA(float const *f_scara, float *cartesian);
 void scara_report_positions(void) ;

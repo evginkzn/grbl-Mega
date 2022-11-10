@@ -38,10 +38,6 @@ const __flash settings_t defaults = {\
     .homing_seek_rate = DEFAULT_HOMING_SEEK_RATE,
     .homing_debounce_delay = DEFAULT_HOMING_DEBOUNCE_DELAY,
     .homing_pulloff = DEFAULT_HOMING_PULLOFF,
-    .scara_arm1 = DEFAULT_SCARA_ARM1,
-    .scara_arm2 = DEFAULT_SCARA_ARM2,
-    .scara_theta = DEFAULT_SCARA_THETA,
-    .scara_psi = DEFAULT_SCARA_PSI,
     .flags = (DEFAULT_REPORT_INCHES << BIT_REPORT_INCHES) | \
              (DEFAULT_LASER_MODE << BIT_LASER_MODE) | \
              (DEFAULT_INVERT_ST_ENABLE << BIT_INVERT_ST_ENABLE) | \
@@ -53,20 +49,15 @@ const __flash settings_t defaults = {\
     .steps_per_mm[X_AXIS] = DEFAULT_X_STEPS_PER_MM,
     .steps_per_mm[Y_AXIS] = DEFAULT_Y_STEPS_PER_MM,
     .steps_per_mm[Z_AXIS] = DEFAULT_Z_STEPS_PER_MM,
-    .steps_per_mm[A_AXIS] = DEFAULT_A_STEPS_PER_MM,
     .max_rate[X_AXIS] = DEFAULT_X_MAX_RATE,
     .max_rate[Y_AXIS] = DEFAULT_Y_MAX_RATE,
     .max_rate[Z_AXIS] = DEFAULT_Z_MAX_RATE,
-    .max_rate[A_AXIS] = DEFAULT_A_MAX_RATE,
     .acceleration[X_AXIS] = DEFAULT_X_ACCELERATION,
     .acceleration[Y_AXIS] = DEFAULT_Y_ACCELERATION,
     .acceleration[Z_AXIS] = DEFAULT_Z_ACCELERATION,
-    .acceleration[A_AXIS] = DEFAULT_A_ACCELERATION,
     .max_travel[X_AXIS] = (-DEFAULT_X_MAX_TRAVEL),
     .max_travel[Y_AXIS] = (-DEFAULT_Y_MAX_TRAVEL),
-    .max_travel[Z_AXIS] = (-DEFAULT_Z_MAX_TRAVEL)
-    .max_travel[A_AXIS] = (-DEFAULT_A_MAX_TRAVEL)};
-    
+    .max_travel[Z_AXIS] = (-DEFAULT_Z_MAX_TRAVEL)};
 
 
 // Method to store startup lines into EEPROM
@@ -293,10 +284,12 @@ uint8_t settings_store_global_setting(uint8_t parameter, float value) {
       case 25: settings.homing_seek_rate = value; break;
       case 26: settings.homing_debounce_delay = int_value; break;
       case 27: settings.homing_pulloff = value; break;
-      case 28: settings.scara_arm1 = value; break;
-      case 29: settings.scara_arm2 = value; break;
-      case 30: settings.scara_theta = value; break;
-      case 31: settings.scara_psi = value; break;
+      case 30: settings.rpm_max = value; spindle_init(); break; // Re-initialize spindle rpm calibration
+      case 31: settings.rpm_min = value; spindle_init(); break; // Re-initialize spindle rpm calibration
+      case 32:
+        if (int_value) { settings.flags |= BITFLAG_LASER_MODE; }
+        else { settings.flags &= ~BITFLAG_LASER_MODE; }
+        break;
       default:
         return(STATUS_INVALID_STATEMENT);
     }

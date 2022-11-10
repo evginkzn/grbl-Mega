@@ -275,6 +275,7 @@ void limits_go_home(uint8_t cycle_mask)
   }
   // Set search mode with approach at seek rate to quickly engage the specified cycle_mask limit switches.
   bool approach = true;
+  angle_mode = true;
   float homing_rate = settings.homing_seek_rate;
   #ifdef DEFAULTS_RAMPS_BOARD
     uint8_t limit_state, n_active_axis;
@@ -342,9 +343,6 @@ void limits_go_home(uint8_t cycle_mask)
                 #else
                   axislock[idx] &= ~(step_pin[idx]);
                 #endif
-                #ifdef IS_SCARA
-                    if (scara_home) scara_report_home_pos(idx);
-                #endif
               }
             }
             sys.homing_axis_lock[idx] = axislock[idx];
@@ -390,6 +388,9 @@ void limits_go_home(uint8_t cycle_mask)
         max_travel = settings.homing_pulloff;
         homing_rate = settings.homing_seek_rate;
       }
+      #ifdef SCARA
+	    scara_report_positions();
+      #endif
     } while (n_cycle-- > 0);
   #else
     uint8_t limit_state, axislock, n_active_axis;

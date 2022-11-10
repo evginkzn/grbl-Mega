@@ -150,7 +150,8 @@ extern volatile uint8_t sys_rt_exec_state;   // Global realtime executor bitflag
 extern volatile uint8_t sys_rt_exec_alarm;   // Global realtime executor bitflag variable for setting various alarms.
 extern volatile uint8_t sys_rt_exec_motion_override; // Global realtime executor bitflag variable for motion-based overrides.
 extern volatile uint8_t sys_rt_exec_accessory_override; // Global realtime executor bitflag variable for spindle/coolant overrides.
-extern uint8_t angle_mode; //to use with scara
+
+extern uint8_t angle_mode;
 
 #ifdef DEBUG
   #define EXEC_DEBUG_REPORT  bit(0)

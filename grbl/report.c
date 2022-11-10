@@ -201,11 +201,9 @@ void report_grbl_settings() {
   report_util_float_setting(25,settings.homing_seek_rate,N_DECIMAL_SETTINGVALUE);
   report_util_uint8_setting(26,settings.homing_debounce_delay);
   report_util_float_setting(27,settings.homing_pulloff,N_DECIMAL_SETTINGVALUE);
-  report_util_float_setting(28, settings.scara_arm1,N_DECIMAL_SETTINGVALUE);
-  report_util_float_setting(29, settings.scara_arm2,N_DECIMAL_SETTINGVALUE);
-  report_util_float_setting(30, settings.scara_theta,N_DECIMAL_SETTINGVALUE);
-  report_util_float_setting(31, settings.scara_psi,N_DECIMAL_SETTINGVALUE);
-  
+  report_util_float_setting(30,settings.rpm_max,N_DECIMAL_RPMVALUE);
+  report_util_float_setting(31,settings.rpm_min,N_DECIMAL_RPMVALUE);
+  report_util_uint8_setting(32,bit_istrue(settings.flags,BITFLAG_LASER_MODE));
   // Print axis settings
   uint8_t idx, set_idx;
   uint8_t val = AXIS_SETTINGS_START_VAL;
@@ -272,7 +270,6 @@ void report_ngc_parameters()
 // Print current gcode parser mode state
 void report_gcode_modes()
 {
-  scara_report_positions(); //test to wiew Scara positions
   printPgmString(PSTR("[GC:G"));
   if (gc_state.modal.motion >= MOTION_MODE_PROBE_TOWARD) {
     printPgmString(PSTR("38."));
