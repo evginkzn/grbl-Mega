@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "servo_wrap.h": "c",
+        "grbl.h": "c",
+        "print.h": "c"
+    }
+}

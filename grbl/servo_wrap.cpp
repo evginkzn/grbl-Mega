@@ -6,7 +6,6 @@
   #include <WProgram.h>
 #endif
 
-#define _useTimer4
 #include <Servo.h>
 
 static Servo servo;

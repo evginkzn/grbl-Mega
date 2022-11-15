@@ -70,6 +70,7 @@
 #include "stepper.h"
 #include "jog.h"
 #include "sleep.h"
+#include "buttons_wrap.h"
 
 // ---------------------------------------------------------------------------------------
 // COMPILE-TIME ERROR CHECKING OF DEFINE VALUES:
